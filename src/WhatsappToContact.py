@@ -9,10 +9,24 @@ import sys
 # Replace below path with the absolute path
 # to chromedriver in your computer
 
-friends_lists = ['Himanshi Swain', 'Vikas Swain']
+friends_lists = ['Save']
 
 # driver = webdriver.Chrome('../chromedriver')
 driver = webdriver.Chrome(executable_path='C:\whatsapp-automate\src\chromedriver.exe')
+
+url = driver.command_executor._url
+session_id = driver.session_id
+
+
+try:
+	with open("url_session_id.txt", "r") as f:
+		url, session_id = f.read().split()
+		driver = webdriver.Remote(command_executor=url,desired_capabilities={})
+		driver.session_id = session_id
+
+except FileNotFoundError:
+	with open("url_session_id.txt", "w") as f:
+		f.write(f"{url}\n{session_id}")
 
 driver.get("https://web.whatsapp.com/")
 wait = WebDriverWait(driver, 600)
@@ -29,20 +43,20 @@ for friend in friends_lists:
 	print(len(persons))
 	for person in persons:
 		try:
-			if person.text not in ['CHATS','MESSAGES']:
-				person_title = person.find_element_by_class_name('_1wjpf')
-				print(person_title.get_attribute("title"))
-				if person_title.get_attribute("title") == friend:
-					person_contact = person.find_element_by_class_name('_2EXPL')
-					person_contact.click()
-					message = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
-					message.send_keys("Automated Hello message")
+			# if person.text not in ['CHATS','MESSAGES']:
+			person_title = person.find_element_by_class_name('_1wjpf')
+			print(person_title.get_attribute("title"))
+			if person_title.get_attribute("title") == friend:
+				person_contact = person.find_element_by_class_name('_2EXPL')
+				person_contact.click()
+				message = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')[0]
+				message.send_keys("Automated Hello message")
 
-					sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
-					sendbutton.click()
-					break
+				sendbutton = driver.find_elements_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')[0]
+				sendbutton.click()
+				break
 		except:
 			print("*")
 			continue
 
-driver.close()
+# driver.close()
