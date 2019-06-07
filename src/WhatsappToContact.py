@@ -54,8 +54,8 @@ class WhatsappMessage:
                     except Exception as e2:
                         print (e2)
                     else:
-                        pass
-                        # sendbutton.click()
+                        # pass
+                        sendbutton.click()
             except Exception as e1:
                 print ("final", e1)
                 
